@@ -24,7 +24,7 @@ func main() {
 		return
 	}
 
-	//  DB 초기화
+	//  DB 초기화 설정
 	common.DB_pool_connect()
 	ipsap.Start()
 }
