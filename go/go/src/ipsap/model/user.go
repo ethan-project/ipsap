@@ -264,39 +264,23 @@ func GetUserFilter() (filter func(map[string]interface{})) {
 }
 
 func getUserQueryAndFilter(moreCondition string) (sql string, filter func(map[string]interface{})) {
-	/*
-			sql = fmt.Sprintf(`
-								SELECT user.user_seq,		user.user_type,				user.user_auth,				user.email,
-											 user.pwd,				user.name,						user.name_en,					user.dept,
-											 user.position,		user.telno,						user.phoneno,					user.major_field,
-											 user.edu_date,		user.edu_institution,	user.edu_course_num,	user.agree_email,
-											 user.agree_sms,	user.agree_pri_open,	user.user_status,			ins.institution_code,
-											 user.institution_seq, user.withdraw_dttm,
-											 IF(user.withdraw_dttm = 0, 99999, TIMESTAMPDIFF(DAY, NOW(), FROM_UNIXTIME(user.withdraw_dttm))) AS withdraw_timediff,
-											 ins.name_ko as institution_name_ko,
-											 ins.name_en as institution_name_en,
-											 ins.membership_payment_date,
-											 ins.expiration_date
-									FROM t_user user, t_institution ins
-								 WHERE user.institution_seq = ins.institution_seq
-								 	 	%v	#moreCondition`, moreCondition)
-		filter = GetUserFilter()
-	*/
-
-	/*
-		sql = `SELECT user.user_seq, user.user_type, user.user_auth, user.email, user.pwd,	user.name FROM t_user user`
-
-		filter = func(row map[string]interface{}) {
-			row["pwd"] = common.EncryptToUrl([]byte(common.Config.Program.EncryptionKey), common.ToStr(row["pwd"]))
-		}
-	*/
-
 	sql = fmt.Sprintf(`
-	SELECT user.user_seq,		user.user_type,				user.user_auth,				user.email,
-					user.pwd,				user.name,						user.name_en
-		FROM t_user user`)
-	filter = GetUserFilter()
+					SELECT user.user_seq,		user.user_type,				user.user_auth,				user.email,
+								 user.pwd,				user.name,						user.name_en,					user.dept,
+								 user.position,		user.telno,						user.phoneno,					user.major_field,
+								 user.edu_date,		user.edu_institution,	user.edu_course_num,	user.agree_email,
+								 user.agree_sms,	user.agree_pri_open,	user.user_status,			ins.institution_code,
+								 user.institution_seq, user.withdraw_dttm,
+								 IF(user.withdraw_dttm = 0, 99999, TIMESTAMPDIFF(DAY, NOW(), FROM_UNIXTIME(user.withdraw_dttm))) AS withdraw_timediff,
+								 ins.name_ko as institution_name_ko,
+								 ins.name_en as institution_name_en,
+								 ins.membership_payment_date,
+								 ins.expiration_date
+						FROM t_user user, t_institution ins
+					 WHERE user.institution_seq = ins.institution_seq
+					 	 	%v	#moreCondition`, moreCondition)
 
+	filter = GetUserFilter()
 	return
 }
 
