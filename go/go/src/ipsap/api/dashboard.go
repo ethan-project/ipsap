@@ -1,10 +1,11 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
 	"ipsap/common"
 	"ipsap/model"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // @Tags DashBoard
@@ -20,6 +21,8 @@ import (
 // @Router /dashboard [get]
 // @Success 200
 func DashBoardList(c *gin.Context) {
+	//log.Println(" func DashBoardList Start ")
+
 	tokenMap := common.Check_token(c)
 	if nil == tokenMap {
 		return
@@ -38,28 +41,28 @@ func DashBoardList(c *gin.Context) {
 	}
 
 	switch common.ToUint(dashboardType) {
-		case model.DEF_DASHBOARD_TYPE_ADMIN:
-			if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_ADMIN_SECRETARY, model.DEF_USER_TYPE_ADMIN_WORK) {
-				common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
-				return
-			}
-		case model.DEF_DASHBOARD_TYPE_RESEARCHER:
-			if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_RESEARCHER) {
-				common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
-				return
-			}
-		case model.DEF_DASHBOARD_TYPE_CHAIRPERSON:
-			if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_CHAIRPERSON) {
-				common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
-				return
-			}
-		default :
-			common.FinishApiWithErrCd(c, common.Api_status_bad_request, common.Error_invalide_params)
+	case model.DEF_DASHBOARD_TYPE_ADMIN:
+		if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_ADMIN_SECRETARY, model.DEF_USER_TYPE_ADMIN_WORK) {
+			common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
 			return
+		}
+	case model.DEF_DASHBOARD_TYPE_RESEARCHER:
+		if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_RESEARCHER) {
+			common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
+			return
+		}
+	case model.DEF_DASHBOARD_TYPE_CHAIRPERSON:
+		if !common.CheckUserTypeAuth(userTypeArr, model.DEF_USER_TYPE_CHAIRPERSON) {
+			common.FinishApiWithErrCd(c, common.Api_status_unauthorized, common.Error_unauthorized)
+			return
+		}
+	default:
+		common.FinishApiWithErrCd(c, common.Api_status_bad_request, common.Error_invalide_params)
+		return
 	}
 
-	app := model.Application{LoginToken :tokenMap,}
-	dashBoard := model.DashBoard{App : app, DashBoard_type :common.ToUint(dashboardType),}
+	app := model.Application{LoginToken: tokenMap}
+	dashBoard := model.DashBoard{App: app, DashBoard_type: common.ToUint(dashboardType)}
 	result := dashBoard.GetDashBoardContent()
 	common.FinishApi(c, common.Api_status_ok, result)
 }
