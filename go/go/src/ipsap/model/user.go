@@ -118,7 +118,7 @@ func (user *User) CheckValidation(c *gin.Context, isAdmin bool, isPlatFormAdminU
 
 	}
 
-	log.Println("============user.Pwd 11111111111111111111 : ", user.Pwd)
+	log.Println("============user.Pwd : ", user.Pwd)
 	if "" != user.Pwd {
 		user_pwd, err := bcrypt.GenerateFromPassword([]byte(user.Pwd), bcrypt.DefaultCost)
 		if nil != err {
@@ -281,6 +281,7 @@ func getUserQueryAndFilter(moreCondition string) (sql string, filter func(map[st
 					 	 	%v	#moreCondition`, moreCondition)
 
 	filter = GetUserFilter()
+	//log.Println("sql : ", sql)
 	return
 }
 
