@@ -15,11 +15,13 @@ type DashBoard struct {
 }
 
 func (board *DashBoard) GetDashBoardContent() (result gin.H) {
-	//log.Println(" func GetDashBoardContent Start")
 	moreSelct := fmt.Sprintf(` , FROM_UNIXTIME(app.submit_dttm, '%%Y-%%m-%%d') as tmp_submit_dttm,
 															 IF(TIMESTAMPDIFF(DAY, FROM_UNIXTIME(app.submit_dttm, '%%Y-%%m-%%d'), NOW()) = 0,
 																	'오늘', concat(TIMESTAMPDIFF(DAY, FROM_UNIXTIME(app.submit_dttm, '%%Y-%%m-%%d'), NOW()),'일 경과')
-																 )AS time_diff`)
+																 )AS time_diff,
+																 (SELECT contents FROM t_application_etc etc WHERE app.application_seq = etc.application_seq AND etc.item_name = 'general_judgement') AS general_judgement,  	
+																 (SELECT contents FROM t_application_etc etc WHERE app.application_seq = etc.application_seq AND etc.item_name = 'general_object') AS general_object	
+																`)
 	switch board.DashBoard_type {
 	case DEF_DASHBOARD_TYPE_ADMIN:
 		result = board.GetAdminDashBoard(moreSelct)
@@ -119,6 +121,7 @@ func (board *DashBoard) GetResearcherDashBoard(moreSelct string) (result gin.H) 
 		"final_cnt":            len(final_rows),
 		"final":                final_rows,
 		"performance_app_list": board.getPerformanceAppList(moreCondition)}
+
 	return
 }
 
