@@ -42,8 +42,8 @@ func (ins *Application) Init() (succ bool) {
 }
 
 func (ins *Application) getAppListQueryAndFilter(moreSelect string, moreJoin string, moreCondition string, appViewType string) (sql string, filter func(map[string]interface{})) {
-	log.Println(" === func getAppListQueryAndFilter Start  ===")
-	log.Println(" === func getAppListQueryAndFilter moreSelect  ===", moreSelect)
+	//log.Println(" === func getAppListQueryAndFilter Start  ===")
+	//log.Println(" === func getAppListQueryAndFilter moreSelect  ===", moreSelect)
 
 	//	wowdolf : 로긴 사용자의 권한이 있는 것만 조회 되어야 함.
 	sql = fmt.Sprintf(`
@@ -172,7 +172,7 @@ func (ins *Application) getAppListQueryAndFilter(moreSelect string, moreJoin str
 		//log.Println("row : ", row)
 	}
 	//log.Println("getAppListQueryAndFilter[SQL] : ", sql)
-	log.Println(" === func getAppListQueryAndFilter End  ===")
+	//log.Println(" === func getAppListQueryAndFilter End  ===")
 	return
 }
 
@@ -505,7 +505,7 @@ func (ins *Application) getMoreCondition(appViewType string, approved bool) (mor
 }
 
 func (ins *Application) LoadList(moreSelect string, moreJoin string, moreCondition string, appViewType string) (ret interface{}) {
-	log.Println(" === func LoadList Start  ===")
+	//log.Println(" === func LoadList Start  ===")
 	//log.Println(" === func LoadList  moreJoin: ===", moreJoin)
 	//log.Println(" === func LoadList  moreCondition: ===", moreCondition)
 
@@ -867,16 +867,15 @@ func (ins *Application) UpdateItemsFromJson(c *gin.Context, data map[string]inte
 		return
 	}
 
-	log.Println("======= 0")
 	//	일반심사 제출과 심사절정 변경인 경우에 => 모든 일반심사 위원이 심사를 완료 했는지 확인한다.
 	if !submit {
-		log.Println("======= 1")
+
 		if submitType == DEF_SUBMIT_TYPE_JUDGE_NORMAL || //	일반 심사
 			submitType == DEF_SUBMIT_TYPE_CHECKING_2 { //	심사 설정 변경
-			log.Println("======= 2")
+
 			app_select := AppSelect{Application: ins}
 			if app_select.Load("normal_review_result", tx) { //	일반심사 결과 로딩
-				log.Println("111", app_select.Datas)
+				//log.Println("app_select.Datas : ", app_select.Datas)
 				submit = true
 				items := []string{"committee_in_member", "committee_ex_member"}
 				for _, item_name := range items {

@@ -73,11 +73,15 @@ func setLog(fileName string) *rotatelogs.RotateLogs {
 }
 
 func setupRouter() *gin.Engine {
-	if common.Config.Server.LogPath != "" {
-		log.SetOutput(setLog("log_file"))
-		gin.DefaultWriter = setLog("log_gin_normal")
-		gin.DefaultErrorWriter = setLog("log_gin_error")
-	}
+	/*
+		if common.Config.Server.LogPath != "" {
+			log.SetOutput(setLog("log_file"))
+			gin.DefaultWriter = setLog("log_gin_normal")
+			gin.DefaultErrorWriter = setLog("log_gin_error")
+		}
+	*/
+	log.SetOutput(os.Stdout)
+
 	r := gin.Default()
 	r.Use(corsMiddleware())
 	return r
@@ -246,12 +250,14 @@ func realStart(port int) {
 			common.GET("/dup-check/email", api.DupCheckEmail)
 		}
 
+		//log.Println(" === func ipsap realStart  ===")
 	}
 
 	/* 로컬에서 화면 호출시 설정 Start */
 	r.Static("/html", "./html/html/")
 	r.Static("/assets", "./html/assets/")
 	r.Static("/plugins", "./html/plugins/")
+	r.Static("/attach", "./html/attach/")
 
 	// 🔹 예: index.html을 기본으로 보여주고 싶다면 라우트 추가
 	r.GET("/", func(c *gin.Context) {
@@ -269,6 +275,7 @@ func realStart(port int) {
 	r.GET("/index.html", func(c *gin.Context) {
 		c.File("./html/index.html")
 	})
+
 	/* 로컬에서 화면 호출시 설정 End */
 
 	port_str := ":" + strconv.Itoa(port)

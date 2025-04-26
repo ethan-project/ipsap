@@ -21,8 +21,6 @@ import (
 // @Router /dashboard [get]
 // @Success 200
 func DashBoardList(c *gin.Context) {
-	//log.Println(" func DashBoardList Start ")
-
 	tokenMap := common.Check_token(c)
 	if nil == tokenMap {
 		return
@@ -65,4 +63,5 @@ func DashBoardList(c *gin.Context) {
 	dashBoard := model.DashBoard{App: app, DashBoard_type: common.ToUint(dashboardType)}
 	result := dashBoard.GetDashBoardContent()
 	common.FinishApi(c, common.Api_status_ok, result)
+
 }
