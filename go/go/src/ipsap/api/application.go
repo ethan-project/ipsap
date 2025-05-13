@@ -1202,6 +1202,15 @@ func checkPossibleAppViewAuthAndGetCondition(c *gin.Context, userTypeArr []strin
 		return
 	case model.DEF_APP_VIEW_POSSIBLE_IRB_CHANGE: // IRB 변경 승인 가능한 신청서 리스트
 		moreCondition = fmt.Sprintf(` AND app.judge_type = %d
+																			AND app.parent_app_seq = 0 
+																			AND app.reg_user_seq = %d`,
+			model.DEF_APP_JUDGE_TYPE_CODE_IRB,
+			user_seq)
+		succ = true
+		return
+	/* 백업
+	case model.DEF_APP_VIEW_POSSIBLE_IRB_CHANGE: // IRB 변경 승인 가능한 신청서 리스트
+		moreCondition = fmt.Sprintf(` AND app.judge_type = %d
 																			AND app.parent_app_seq = 0
 																			AND app.application_step = %d
 																			AND app.application_result IN (%d, %d)
@@ -1213,6 +1222,7 @@ func checkPossibleAppViewAuthAndGetCondition(c *gin.Context, userTypeArr []strin
 			user_seq)
 		succ = true
 		return
+	*/
 	case model.DEF_APP_VIEW_POSSIBLE_IRB_RETRY: // IRB 변경 승인 가능한 신청서 리스트
 		moreCondition = fmt.Sprintf(` AND app.judge_type = %d
 																			AND app.parent_app_seq = 0
